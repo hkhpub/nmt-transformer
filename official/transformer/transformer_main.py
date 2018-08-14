@@ -411,6 +411,14 @@ def define_transformer_flags():
             "Path to subtoken vocabulary file. If data_download.py was used to "
             "download and encode the training data, look in the data_dir to find "
             "the vocab file."))
+    flags.DEFINE_bool(
+        name="gpu_allow_growth", short_name="gag", default=False,
+        help=flags_core.help_wrap(
+            "Allow gpu memory dynamic growth."))
+    flags.DEFINE_float(
+        name="gpu_memory_fraction", short_name="gmf", default=1.0,
+        help=flags_core.help_wrap(
+            "Fraction of total gpu memory"))
 
     flags_core.set_defaults(data_dir="/tmp/translate_ende",
                             model_dir="/tmp/transformer_model",
@@ -451,7 +459,7 @@ def define_transformer_flags():
     flags_core.require_cloud_storage(["data_dir", "model_dir", "export_dir"])
 
 
-def construct_estimator(flags_obj, params, schedule_manager):
+def construct_estimator(flags_obj, params, schedule_manager, session_config):
     """Construct an estimator from either Estimator or TPUEstimator.
 
     Args:
@@ -466,7 +474,8 @@ def construct_estimator(flags_obj, params, schedule_manager):
         flags_core.get_num_gpus(flags_obj), flags_obj.all_reduce_alg)
     return tf.estimator.Estimator(
         model_fn=model_fn, model_dir=flags_obj.model_dir, params=params,
-        config=tf.estimator.RunConfig(train_distribute=distribution_strategy))
+        config=tf.estimator.RunConfig(train_distribute=distribution_strategy,
+                                      session_config=session_config))
 
 
 def run_transformer(flags_obj):
@@ -531,7 +540,10 @@ def run_transformer(flags_obj):
         test_id=flags_obj.benchmark_test_id)
 
     # Train and evaluate transformer model
-    estimator = construct_estimator(flags_obj, params, schedule_manager)
+    session_config = tf.ConfigProto()
+    session_config.gpu_options.allow_growth = params["gpu_allow_growth"]
+    session_config.gpu_options.per_process_gpu_memory_fraction = params["gpu_memory_fraction"]
+    estimator = construct_estimator(flags_obj, params, schedule_manager, session_config)
     run_loop(
         estimator=estimator,
         # Training arguments
