@@ -412,11 +412,11 @@ def define_transformer_flags():
             "download and encode the training data, look in the data_dir to find "
             "the vocab file."))
     flags.DEFINE_bool(
-        name="gpu_allow_growth", short_name="gag", default=False,
+        name="gpu_allow_growth", short_name="gag", default=True,
         help=flags_core.help_wrap(
             "Allow gpu memory dynamic growth."))
     flags.DEFINE_float(
-        name="gpu_memory_fraction", short_name="gmf", default=1.0,
+        name="gpu_memory_fraction", short_name="gmf", default=0.5,
         help=flags_core.help_wrap(
             "Fraction of total gpu memory"))
 
@@ -474,8 +474,7 @@ def construct_estimator(flags_obj, params, schedule_manager, session_config):
         flags_core.get_num_gpus(flags_obj), flags_obj.all_reduce_alg)
     return tf.estimator.Estimator(
         model_fn=model_fn, model_dir=flags_obj.model_dir, params=params,
-        config=tf.estimator.RunConfig(train_distribute=distribution_strategy,
-                                      session_config=session_config))
+        config=tf.estimator.RunConfig(train_distribute=distribution_strategy))
 
 
 def run_transformer(flags_obj):
