@@ -1,2 +1,3 @@
 # nmt-transformer
-copy of tensorflow official transformer model
+modified version of official transformer model
+
