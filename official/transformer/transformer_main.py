@@ -541,8 +541,8 @@ def run_transformer(flags_obj):
 
     # Train and evaluate transformer model
     session_config = tf.ConfigProto()
-    session_config.gpu_options.allow_growth = params["gpu_allow_growth"]
-    session_config.gpu_options.per_process_gpu_memory_fraction = params["gpu_memory_fraction"]
+    session_config.gpu_options.allow_growth = flags_obj.gpu_allow_growth
+    session_config.gpu_options.per_process_gpu_memory_fraction = flags_obj.gpu_memory_fraction
     estimator = construct_estimator(flags_obj, params, schedule_manager, session_config)
     run_loop(
         estimator=estimator,
