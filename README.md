@@ -1,5 +1,5 @@
 # nmt-transformer
-modified version of official transformer model
+variant of official transformer model
 
 ## Requirements
 Please follow the below steps before running models in this repo:
