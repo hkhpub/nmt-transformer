@@ -181,8 +181,8 @@ def translate_and_compute_bleu(estimator, vocab_helper, bleu_source, bleu_ref, s
     tmp_filename = tmp.name
 
     translate_subword.translate_file(
-        estimator, vocab_helper, bleu_source, subword_option,
-        output_file=tmp_filename, print_all_translations=False)
+        estimator, vocab_helper, bleu_source, output_file=tmp_filename,
+        subword_option=subword_option, print_all_translations=False)
 
     # Compute uncased and cased bleu scores.
     uncased_score = compute_bleu.bleu_wrapper(bleu_ref, tmp_filename, False)
@@ -410,6 +410,11 @@ def define_transformer_flags():
             "Path to subtoken vocabulary file. If data_download.py was used to "
             "download and encode the training data, look in the data_dir to find "
             "the vocab file."))
+    flags.DEFINE_string(
+        name="subword_option", short_name="so", default="bpe",
+        help=flags_core.help_wrap(
+            "Possible values: ['', 'bpe', 'spm']"))
+
     flags.DEFINE_bool(
         name="gpu_allow_growth", short_name="gag", default=True,
         help=flags_core.help_wrap(
@@ -533,7 +538,7 @@ def run_transformer(flags_obj):
     benchmark_logger = logger.get_benchmark_logger()
     benchmark_logger.log_run_info(
         model_name="transformer",
-        dataset_name="wmt_translate_ende",
+        dataset_name="open_subtitles",
         run_params=params,
         test_id=flags_obj.benchmark_test_id)
 

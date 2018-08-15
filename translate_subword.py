@@ -94,8 +94,8 @@ def _clean(sentence, subword_option):
 
 
 def translate_file(
-    estimator, vocab_helper, input_file, subword_option=None,
-    output_file=None, print_all_translations=True):
+    estimator, vocab_helper, input_file, output_file=None,
+        subword_option=None, print_all_translations=True):
     """Translate lines in file, and save to output file if specified.
 
     Args:
@@ -105,7 +105,7 @@ def translate_file(
       input_file: file containing lines to translate
       output_file: file that stores the generated translations.
       print_all_translations: If true, all translations are printed to stdout.
-
+      subword_option:
     Raises:
       ValueError: if output file is invalid.
     """
@@ -192,7 +192,7 @@ def main(unused_argv):
 
     if FLAGS.text is not None:
         tf.logging.info("Translating text: %s" % FLAGS.text)
-        translate_text(estimator, vocab_helper, FLAGS.text)
+        translate_text(estimator, vocab_helper, FLAGS.text, FLAGS.subword_option)
 
     if FLAGS.file is not None:
         input_file = os.path.abspath(FLAGS.file)
@@ -205,7 +205,7 @@ def main(unused_argv):
             output_file = os.path.abspath(FLAGS.file_out)
             tf.logging.info("File output specified: %s" % output_file)
 
-        translate_file(estimator, vocab_helper, input_file, output_file)
+        translate_file(estimator, vocab_helper, input_file, output_file, FLAGS.subword_option)
 
 
 def define_translate_flags():
@@ -233,7 +233,7 @@ def define_translate_flags():
             "the vocab file."))
     flags.mark_flag_as_required("vocab_file")
     flags.DEFINE_string(
-        name="subword_option", short_name="so", default=None,
+        name="subword_option", short_name="so", default="bpe",
         help=flags_core.help_wrap(
             "Possible values: ['', 'bpe', 'spm']"))
 
