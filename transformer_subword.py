@@ -25,11 +25,11 @@ import os
 import tempfile
 
 import compute_bleu
-import translate
+import translate_subword
 from model import model_params
 from model import transformer
-from utils import dataset, metrics, schedule
-from utils import tokenizer
+from utils import dataset, vocab_utils, metrics
+from utils import schedule
 from comm_utils.export import export
 from comm_utils.flags import core as flags_core
 from comm_utils.logs import hooks_helper
@@ -174,14 +174,14 @@ def get_train_op_and_metrics(loss, params):
         return train_op, train_metrics
 
 
-def translate_and_compute_bleu(estimator, subtokenizer, bleu_source, bleu_ref):
+def translate_and_compute_bleu(estimator, vocab_helper, bleu_source, bleu_ref, subword_option):
     """Translate file and report the cased and uncased bleu scores."""
     # Create temporary file to store translation.
     tmp = tempfile.NamedTemporaryFile(delete=False)
     tmp_filename = tmp.name
 
-    translate.translate_file(
-        estimator, subtokenizer, bleu_source,
+    translate_subword.translate_file(
+        estimator, vocab_helper, bleu_source, subword_option,
         output_file=tmp_filename, print_all_translations=False)
 
     # Compute uncased and cased bleu scores.
@@ -196,12 +196,12 @@ def get_global_step(estimator):
     return int(estimator.latest_checkpoint().split("-")[-1])
 
 
-def evaluate_and_log_bleu(estimator, bleu_source, bleu_ref, vocab_file):
+def evaluate_and_log_bleu(estimator, bleu_source, bleu_ref, vocab_file, subword_option):
     """Calculate and record the BLEU score."""
-    subtokenizer = tokenizer.Subtokenizer(vocab_file)
+    vocab_helper = vocab_utils.VocabHelper(vocab_file)
 
     uncased_score, cased_score = translate_and_compute_bleu(
-        estimator, subtokenizer, bleu_source, bleu_ref)
+        estimator, vocab_helper, bleu_source, bleu_ref, subword_option)
 
     tf.logging.info("Bleu score (uncased):", uncased_score)
     tf.logging.info("Bleu score (cased):", cased_score)
@@ -216,7 +216,7 @@ def _validate_file(filepath):
 
 def run_loop(
     estimator, schedule_manager, train_hooks=None, benchmark_logger=None,
-    bleu_source=None, bleu_ref=None, bleu_threshold=None, vocab_file=None):
+    bleu_source=None, bleu_ref=None, bleu_threshold=None, vocab_file=None, subword_option=None):
     """Train and evaluate model, and optionally compute model's BLEU score.
 
     **Step vs. Epoch vs. Iteration**
@@ -249,6 +249,7 @@ def run_loop(
       bleu_ref: File containing reference translations for BLEU calculation.
       bleu_threshold: minimum BLEU score before training is stopped.
       vocab_file: Path to vocab file that will be used to subtokenize bleu_source.
+      subword_option: Subword option, possible values ['', 'bpe', 'spm']
 
     Raises:
       ValueError: if both or none of single_iteration_train_steps and
@@ -314,7 +315,7 @@ def run_loop(
         # are compared to reference file to get the actual bleu score.
         if evaluate_bleu:
             uncased_score, cased_score = evaluate_and_log_bleu(
-                estimator, bleu_source, bleu_ref, vocab_file)
+                estimator, bleu_source, bleu_ref, vocab_file, subword_option)
 
             # Write actual bleu scores using summary writer and benchmark logger
             global_step = get_global_step(estimator)

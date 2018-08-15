@@ -16,7 +16,6 @@
 
 from collections import defaultdict
 
-
 BASE_PARAMS = defaultdict(
     lambda: None,  # Set default value to None.
 
@@ -104,4 +103,3 @@ HKH_PARAMS.update(
     num_heads=4,
     filter_size=256,
 )
-
