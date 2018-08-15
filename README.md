@@ -10,15 +10,15 @@ Please follow the below steps before running models in this repo:
    ```
 2. Install dependencies:
    ```
-   pip3 install --user -r official/requirements.txt
+   pip3 install --user -r install/requirements.txt
    ```
    or
    ```
-   pip install --user -r official/requirements.txt
+   pip install --user -r install/requirements.txt
    ```
    for virtualenv users:
    ```
-   pip install -r official/requirements.txt
+   pip install -r install/requirements.txt
    ```
    
 ## Run Configuration
