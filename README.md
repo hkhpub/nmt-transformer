@@ -27,12 +27,12 @@ Please follow the below steps before running models in this repo:
    
 ## Use cases
 As I mentioned above, this repository support two use cases.
-1. If you want to integrate your own vocabulary file, like bpe vocab, use following scripts.
+1. If you want to integrate your own vocabulary file, like bpe vocab, use following scripts:
 - [make_tfrecords_subword.py](https://github.com/hkhpub/nmt-transformer/blob/master/make_tfrecords_subword.py)
 - [transformer_subword.py](https://github.com/hkhpub/nmt-transformer/blob/master/transformer_subword.py)
 - [translate_subword.py](https://github.com/hkhpub/nmt-transformer/blob/master/translate_subword.py)
 
-2. If you want to use built in vocabulary (subtokenizer, same as official codes), use following scripts.
+2. If you want to use built in vocabulary (subtokenizer, same as official codes), use following scripts:
 - [make_tfrecords.py](https://github.com/hkhpub/nmt-transformer/blob/master/make_tfrecords.py)
 - [transformer_main.py](https://github.com/hkhpub/nmt-transformer/blob/master/transformer_main.py)
 - [translate.py](https://github.com/hkhpub/nmt-transformer/blob/master/translate.py)
