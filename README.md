@@ -41,7 +41,7 @@ As I mentioned above, this repository support two use cases.
 ## Run Configuration
 * Note: Only support shared vocabulary file.
 
-1. Exports env variables according to your own path.
+1. Export env variables according to your own path.
 ```sh
 PARAM_SET=base
 OPUS_DIR=/home/hkh/data/iwslt18/open-subtitles
