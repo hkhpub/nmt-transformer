@@ -76,7 +76,7 @@ python transformer_subword.py \
 
 4. Translate using trained model.
 ```sh
-python translate.py \
+python translate_.py \
 --model_dir=$MODEL_DIR \
 --vocab_file=$VOCAB_FILE \
 --param_set=$PARAM_SET \
