@@ -93,7 +93,11 @@ python compute_bleu.py \
 
 ### Evaluation results
 I tested two transformation models(bpe and subtoken) on [OpenSubtitles18](http://opus.nlpl.eu/) Basque(eu)-English(en) (Moses)dataset.
-Below is the evaluation results after trained for 10 epochs. 
+Click [here](http://opus.nlpl.eu/download.php?f=OpenSubtitles2018%2Fen-eu.txt.zip) to download the dataset.
+I selected 5000 examples as a hold-out data, in which 4000 examples are used as devset, and the other 1000 examples are used for testset.
+
+Below is the evaluation results for testset after trained for 10 epochs. 
+I think `big` param set is overkill for this dataset which has about 800k parallel sentence pairs.
 
 Dataset | Subword | Param Set |Score
 --- | --- | --- | --- |
