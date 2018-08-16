@@ -99,5 +99,6 @@ Dataset | Subword | Param Set |Score
 --- | --- | --- | --- |
 open-subtitles 2018 | bpe (16000) | base | 24.32
 open-subtitles 2018 | subtoken (16000) | base | 29.26
+open-subtitles 2018 | subtoken (16000) | big | 19.94
 
 * For more details, see https://github.com/tensorflow/models/tree/master/official/transformer
