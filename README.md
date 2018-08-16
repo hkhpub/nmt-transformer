@@ -65,7 +65,6 @@ python make_tfrecords_subword.py \
 
 3. Run transformer model to train.
 ```sh
-
 python transformer_subword.py \
 --data_dir=$DATA_DIR \
 --model_dir=$MODEL_DIR \
@@ -74,5 +73,32 @@ python transformer_subword.py \
 --bleu_source=$TEST_SOURCE \
 --bleu_ref=$TEST_REF
 ```
+
+4. Translate using trained model.
+```sh
+python translate.py \
+--model_dir=$MODEL_DIR \
+--vocab_file=$VOCAB_FILE \
+--param_set=$PARAM_SET \
+--file=$TEST_SOURCE \
+--file_out=/tmp/translation.en
+```
+
+5. Compute bleu scores of translated result.
+```sh
+python compute_bleu.py \
+--translation=/tmp/translation.en \
+--reference=$TEST_REF
+```
+
+### Evaluation results
+I tested two transformation models(bpe and subtoken) on [OpenSubtitles18](http://opus.nlpl.eu/) Eu-En dataset.
+Below is the evaluation results after trained for 10 epochs. 
+
+Dataset | Subword | Param Set |Score
+--- | --- | --- | --- |
+open-subtitles 2018 | bpe (16000) | base | 24.32
+open-subtitles 2018 | subtoken (16000) | base | 29.26
+open-subtitles 2018 | subtoken (16000) | big | 19.94
 
 * For more details, see https://github.com/tensorflow/models/tree/master/official/transformer
