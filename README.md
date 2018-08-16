@@ -92,7 +92,7 @@ python compute_bleu.py \
 ```
 
 ### Evaluation results
-I tested two transformation models(bpe and subtoken) on [OpenSubtitles18](http://opus.nlpl.eu/) Basque(eu)-English(en) dataset.
+I tested two transformation models(bpe and subtoken) on [OpenSubtitles18](http://opus.nlpl.eu/) Basque(eu)-English(en) (Moses)dataset.
 Below is the evaluation results after trained for 10 epochs. 
 
 Dataset | Subword | Param Set |Score
