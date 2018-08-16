@@ -50,11 +50,14 @@ class VocabHelper(object):
         return _encode(self.tgt_vocab_table, raw_string, add_eos)
 
     def decode(self, ids):
-        return " ".join([self.reverse_tgt_vocab_table[token_id] for token_id in ids])
+        return " ".join([self.reverse_tgt_vocab_table[token_id]
+                         if token_id in self.reverse_tgt_vocab_table else UNK
+                         for token_id in ids])
 
 
 def _encode(src_vocab_table, raw_string, add_eos=False):
-    token_ids = [src_vocab_table[token] for token in raw_string.split(" ")]
+    token_ids = [src_vocab_table[token] if token in src_vocab_table else UNK_ID
+                 for token in raw_string.split(" ")]
     if add_eos:
         token_ids.append(EOS_ID)
     return token_ids
